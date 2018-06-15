@@ -1,4 +1,5 @@
 var lionRouter = require('express').Router();
+var _ = require('lodash');
 
 var lions = [];
 var id = 0;
@@ -54,5 +55,17 @@ lionRouter.put('/:id', function(req, res) {
     res.json(updatedLion);
   }
 });
+
+lionRouter.delete('/:id', (req, res) => {
+  const oldLionIndex = lions.findIndex(lion => lion.id === req.params.id)
+  
+  if(!lions[oldLionIndex])
+    res.send()
+  else {
+    let deletedLion = lions[oldLionIndex]
+    lions.splice(deletedLion, 1)
+    res.status(200).send(lions)
+  }
+})
 
 module.exports = lionRouter;
