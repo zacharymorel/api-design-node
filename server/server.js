@@ -20,6 +20,12 @@ var id = 0;
 
 var updateId = function(req, res, next) {
   // fill this out. this is the route middleware for the ids
+  if(!req.body.id) {
+    id++ 
+    req.body.id = id + ''
+  }
+  
+  next() 
 };
 
 app.use(morgan('dev'))
@@ -30,7 +36,14 @@ app.use(bodyParser.json());
 
 app.param('id', function(req, res, next, id) {
   // fill this out to find the lion based off the id
-  // and attach it to req.lion. Rember to call next()
+  const lion = lions.find(lion => lion.id === id)
+  
+  if(lion) {
+    req.lion = lion
+    next()
+  } 
+  else 
+    res.send() // in prod app we'd either pass next(new Error()) || res.status(401).send()
 });
 
 app.get('/lions', function(req, res){
@@ -38,7 +51,7 @@ app.get('/lions', function(req, res){
 });
 
 app.get('/lions/:id', function(req, res){
-  // use req.lion
+  const lion = req.lion
   res.json(lion || {});
 });
 
@@ -59,12 +72,17 @@ app.put('/lions/:id', function(req, res) {
 
   var lion = _.findIndex(lions, {id: req.params.id});
   if (!lions[lion]) {
-    res.send();
+    res.send(); // in prod app we'd either pass next(new Error()) || res.status(401).send()
   } else {
     var updatedLion = _.assign(lions[lion], update);
     res.json(updatedLion);
   }
 });
 
-app.listen(3000);
-console.log('on port 3000');
+// MiddleWare Error Handler
+app.use(function(err, req, res, next) {
+  if(err)
+    express.status(500).send(err)
+})
+
+app.listen(3000, console.log('on port 3000'));
