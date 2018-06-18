@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
+var schemaOptions = {usePushEach: true}
 
 var CategorySchema = new Schema({
   name: {
@@ -7,6 +8,6 @@ var CategorySchema = new Schema({
     required: true,
     unique: true
   }
-});
+}, schemaOptions);
 
 module.exports = mongoose.model('category', CategorySchema);

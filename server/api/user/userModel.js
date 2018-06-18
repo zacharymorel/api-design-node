@@ -1,6 +1,8 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var bcrypt = require('bcrypt');
+var schemaOptions = {usePushEach: true}
+
 var UserSchema = new Schema({
   username: {
     type: String,
@@ -13,7 +15,7 @@ var UserSchema = new Schema({
     type: String,
     required: true
   }
-});
+}, schemaOptions);
 
 // middleware that will run before a document
 // is created
